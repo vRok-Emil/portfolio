@@ -1,0 +1,81 @@
+.projects{
+    padding: 5rem 2rem;
+    background-color: #f8f9fa;
+}
+
+@media (prefers-color-scheme: dark) {
+    .projects{
+        background-color: #1a1a1a;
+    }
+    
+}
+
+.container{ 
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.projects h2{
+    font-size:2.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    color:var(--foreground)
+}
+
+.projectGrid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300, 1fr));
+    gap:2rem;
+}
+
+.projectCard{
+    background: var(--background);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.projectCard:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+}
+
+.projectCard h3{
+    font-size:1rem;
+    margin-bottom: 1.5rem;
+    color: #667eea;
+}
+
+.projectCard p{
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--foreground);
+    margin-bottom: 1.5rem;
+}
+
+.techStack{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.techBadge{
+    padding: 0.4rem 0.8rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color:white;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+
+@media (max-width: 768px){
+    .projects{
+        padding:3rem 1rem;
+    }
+
+    .projectGrid{
+        grid-template-columns: 1fr;
+    }
+}
