@@ -1,15 +1,21 @@
+import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export default function Home() {
   return (
-    <main>
-      <Hero />
-     <About />
-      <Projects />
-      <Contact /> 
-    </main>
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Projects />
+        <Contact /> 
+      </main>
+      <ScrollToTop />
+    </>
   );
 }

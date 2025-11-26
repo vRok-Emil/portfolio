@@ -2,7 +2,7 @@ import styles from './Hero.module.css';
 
 export default function hero(){
  return (
-    <section className={styles.hero}>
+    <section id="hem" className={styles.hero}>
         <div className={styles.content}>
             <h1>Hej, jag är Emil Rönnqvist</h1>
             <p className={styles.subtitle}>Webbutvecklare & Designer</p>
