@@ -1,41 +1,63 @@
+"use client";
+import { useState, useEffect } from 'react';
 import styles from './Projects.module.css';
 
+interface GitHubRepo {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  topics: string[];
+  language: string | null;
+}
+
 interface Project {
-    id: number;
-    title: string;
-    description: string;
-    tech: string[];
+  id: number;
+  title: string;
+  description: string;
+  tech: string[];
+  link: string;
 }
-
-const projects: Project[] = [
-{
-id: 1,
-title: 'E-handelsplattform',
-description: 'En modern e-handelsplattform byggd med Next.js och TypeScript.',
-tech: ['Next.js', 'TypeScript', 'CSS'],
-},
-{
-id:2,
-title: 'väderapp',
-description: 'En responsiv väderapplikation med realtidsdata.',
-tech: ['React', 'API', 'CSS']
-},
-{
-id:3,
-title: 'Portfolio Webbplats',
-description: 'En personlig portfolio webbplats för att visa mina projekt och färdigheter.',
-tech: ['Next.js', 'React', 'CSS']
-},
-{id:4,
-title: 'Bloggplattform',
-description: 'En bloggplattform med användarautentisering och innehållshantering.',
-tech: ['Node.js', 'Express', 'MongoDB']
-}
-];
-
+//följde någon video för denna.
 export default function Projects(){
-    return(
-     <section id="projekt" className={styles.projects}>
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const repoUrls = [
+    "https://api.github.com/repos/vRok-Emil/jobchaserEmilR",
+    "https://api.github.com/repos/vRok-Emil/u02-individuell-uppgift-egen-portfoliosida-vRok-Emil",
+    "https://api.github.com/repos/vRok-Emil/Nextract"
+  ];
+
+  useEffect(() => {
+    async function fetchProjects(){
+      try {
+        const fetchedRepos = await Promise.all(
+          repoUrls.map(url => fetch(url).then(res => res.json()))
+        );
+        const formattedProjects: Project[] = fetchedRepos.map((repo: GitHubRepo) => ({
+          id: repo.id,
+          title: repo.name, 
+          description: repo.description || 'Ingen beskrivning tillgänglig',
+          tech: repo.topics.filter(topic => topic !== 'portfolio-project'),
+          link: repo.html_url
+        }));
+        setProjects(formattedProjects);
+      } catch (error) {
+        console.error('Fel vid hämtning av projekt:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return <div>Laddar projekt...</div>;
+  }
+
+  return (
+<section id="projekt" className={styles.projects}>
       <div className={styles.container}>
         <h2>Mina Projekt</h2>
         <div className={styles.projectGrid}>
@@ -50,10 +72,13 @@ export default function Projects(){
                   </span>
                 ))}
               </div>
+              <a href={project.link} target="_blank" rel="noopener noreferrer">
+                Visa på GitHub →
+              </a>
             </div>
           ))}
         </div>
       </div>
     </section>
-    )
+  );
 }

@@ -33,6 +33,7 @@
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     color: var(--foreground);
+    text-align: center;
 }
 
 .skillGrid {
