@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from 'react';
-import styles from './Projects.module.css';
+import { useState, useEffect } from "react";
+import styles from "./Projects.module.css";
 
 interface GitHubRepo {
   id: number;
@@ -19,32 +19,51 @@ interface Project {
   link: string;
 }
 //följde någon video för denna.
-export default function Projects(){
+export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const repoUrls = [
     "https://api.github.com/repos/vRok-Emil/jobchaserEmilR",
     "https://api.github.com/repos/vRok-Emil/u02-individuell-uppgift-egen-portfoliosida-vRok-Emil",
-    "https://api.github.com/repos/vRok-Emil/Nextract"
+    "https://api.github.com/repos/vRok-Emil/Nextract",
   ];
 
   useEffect(() => {
-    async function fetchProjects(){
+    async function fetchProjects() {
       try {
+        const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+        const headers: HeadersInit = token
+          ? { Authorization: `Bearer ${token}` }
+          : {};
+
         const fetchedRepos = await Promise.all(
-          repoUrls.map(url => fetch(url).then(res => res.json()))
+          repoUrls.map((url) =>
+            fetch(url, { headers }).then((res) => {
+              if (!res.ok) {
+                console.warn(`Failed to fetch ${url}: ${res.status}`);
+                return null;
+              }
+              return res.json();
+            })
+          )
         );
-        const formattedProjects: Project[] = fetchedRepos.map((repo: GitHubRepo) => ({
-          id: repo.id,
-          title: repo.name, 
-          description: repo.description || 'Ingen beskrivning tillgänglig',
-          tech: repo.topics.filter(topic => topic !== 'portfolio-project'),
-          link: repo.html_url
-        }));
+        const formattedProjects: Project[] = fetchedRepos
+          .filter(
+            (repo): repo is GitHubRepo => repo !== null && repo.id !== undefined
+          )
+          .map((repo: GitHubRepo) => ({
+            id: repo.id,
+            title: repo.name,
+            description: repo.description || "Ingen beskrivning tillgänglig",
+            tech: (repo.topics || []).filter(
+              (topic) => topic !== "portfolio-project"
+            ),
+            link: repo.html_url,
+          }));
         setProjects(formattedProjects);
       } catch (error) {
-        console.error('Fel vid hämtning av projekt:', error);
+        console.error("Fel vid hämtning av projekt:", error);
       } finally {
         setLoading(false);
       }
@@ -57,7 +76,7 @@ export default function Projects(){
   }
 
   return (
-<section id="projekt" className={styles.projects}>
+    <section id="projekt" className={styles.projects}>
       <div className={styles.container}>
         <h2>Mina Projekt</h2>
         <div className={styles.projectGrid}>
